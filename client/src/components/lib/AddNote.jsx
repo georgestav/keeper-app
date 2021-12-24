@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { Form, Button, Row, Container, FloatingLabel } from "react-bootstrap";
 
@@ -38,6 +38,7 @@ export default function AddNote({ sendDataToParent }) {
 							placeholder="Note title here"
 						/>
 					</FloatingLabel>
+
 					<FloatingLabel
 						controlId="note_area_id"
 						label="Note"
