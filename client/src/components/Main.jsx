@@ -1,32 +1,25 @@
-import Card from "react-bootstrap/Card";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
+import React, { useState, useEffect } from "react";
+import AddNote from "./lib/AddNote";
+import ViewNotes from "./lib/ViewNotes";
 
-function Main() {
+export default function Main() {
+	// state storage for the changing value, that value changes when a note is saved and is passed down to the ViewNotes component triggering a get request to the server
+	const [edited, setEdited] = useState(true);
+
+	//hande data received from child component
+	const sendDataToParent = (index) => {
+		setEdited(index);
+	};
 	return (
 		<div>
-			<Container>
-				<Row>
-					<Col>
-						<Card className="card mt-3">
-							<Card.Body className="d-flex flex-column justify-content-center">
-								<Card.Title>Keep it everywhere</Card.Title>
-								<Card.Text>
-									Quickly capture what's on your mind and get
-									a reminder later at the right place or time.
-									Speak a voice memo on the go and have it
-									automatically transcribed.
-								</Card.Text>
-								<Button variant="outline-dark">Keep it!</Button>
-							</Card.Body>
-						</Card>
-					</Col>
-				</Row>
-			</Container>
+			<div>
+				<AddNote sendDataToParent={sendDataToParent} />
+				{/* send the function down to child that is going to return true or false each time an article is saved */}
+			</div>
+			<div>
+				<ViewNotes edited={edited} />
+				{/* sending down to child that is going to re-render when the value changes */}
+			</div>
 		</div>
 	);
 }
-
-export default Main;

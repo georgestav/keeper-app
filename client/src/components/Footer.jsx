@@ -1,18 +1,22 @@
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
+import { Row, Container } from "react-bootstrap/";
 
-function Footer() {
+export default function Footer() {
 	const year = new Date();
 
 	return (
-		<footer className="fixed-bottom">
-			<hr />
+		<footer className="bg-dark text-white">
 			<Container className="">
 				<Row>
 					<div className="text-center">
 						<p>
 							{year.getFullYear()} Copyright{" "}
-							<a href="georgestav.dev">georgestav.dev</a>
+							<a
+								href="https://georgestav.dev/"
+								target="_blank"
+								className="text-decoration-none text-info"
+							>
+								georgestav.dev
+							</a>
 						</p>
 					</div>
 				</Row>
@@ -20,5 +24,3 @@ function Footer() {
 		</footer>
 	);
 }
-
-export default Footer;

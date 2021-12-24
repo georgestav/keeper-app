@@ -1,23 +1,25 @@
-import Navbar from "react-bootstrap/Navbar";
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
+import { Navbar, Container, Nav } from "react-bootstrap/";
+import { NavLink } from "react-router-dom";
 
-function Header() {
+export default function Header() {
 	return (
 		<header>
 			<Navbar bg="dark" variant="dark">
 				<Container>
-					<Navbar.Brand href="#home">Keeper</Navbar.Brand>
+					{/* prettier-ignore */}
+					<Navbar.Brand as={NavLink} to="/">Keeper</Navbar.Brand>
 					<Nav className="justify-content-end">
-						<Nav.Link href="/about">About</Nav.Link>
-						<Nav.Link href="/keepit">Keep it</Nav.Link>
-						<Nav.Link href="/register">Register</Nav.Link>
-						<Nav.Link href="/profile">Profile</Nav.Link>
+						{/* prettier-ignore */}
+						<Nav.Link as={NavLink} to="/about">About</Nav.Link>
+						{/* prettier-ignore */}
+						<Nav.Link as={NavLink} to="/keepit">Keep it</Nav.Link>
+						{/* prettier-ignore */}
+						<Nav.Link as={NavLink} to="/register">Register</Nav.Link>
+						{/* prettier-ignore */}
+						<Nav.Link as={NavLink} to="/profile">Profile</Nav.Link>
 					</Nav>
 				</Container>
 			</Navbar>
 		</header>
 	);
 }
-
-export default Header;
