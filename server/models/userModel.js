@@ -8,10 +8,15 @@ const User = db.define(
 	"users",
 	{
 		//model attributes defined here
+
 		user_id: {
 			autoIncrement: true,
 			primaryKey: true,
 			type: Sequelize.INTEGER,
+		},
+		access: {
+			type: DataTypes.TEXT,
+			allowNull: false,
 		},
 		f_name: {
 			type: DataTypes.STRING(250),
@@ -33,6 +38,21 @@ const User = db.define(
 		password: {
 			type: DataTypes.STRING(250),
 			allowNull: false,
+			validate: {
+				len: {
+					args: 6,
+					msg: "Password must be more than 6 characters",
+				},
+			},
+			set(value) {
+				try {
+					const salt = bcrypt.genSaltSync(10);
+					const password = bcrypt.hashSync(value, salt);
+					return this.setDataValue("password", password);
+				} catch (err) {
+					console.log(err);
+				}
+			},
 		},
 		avatar: {
 			type: DataTypes.BLOB("long"),
@@ -42,25 +62,5 @@ const User = db.define(
 		freezeTableName: true, // telling sequilize i want the table name defined above
 	}
 );
-
-//hash users password on create
-User.beforeCreate((user) => {
-	try {
-		const salt = bcrypt.genSaltSync(10);
-		user.password = bcrypt.hashSync(user.password, salt);
-	} catch (err) {
-		console.log(err);
-	}
-});
-
-//hash users password on update
-User.beforeUpdate((user) => {
-	try {
-		const salt = bcrypt.genSaltSync(10);
-		user.password = bcrypt.hashSync(user.password, salt);
-	} catch (err) {
-		console.log(err);
-	}
-});
 
 export default User;

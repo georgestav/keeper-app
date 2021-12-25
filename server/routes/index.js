@@ -1,5 +1,5 @@
 import express from "express";
-
+import sharp from "sharp";
 import {
 	createNote,
 	readAllNotes,
@@ -9,7 +9,12 @@ import {
 	deleteAllNotes,
 } from "../controllers/Notes.js";
 
-import { createUser } from "../controllers/users.js";
+import {
+	createUser,
+	getUserByID,
+	updateUserByID,
+	deleteUserById,
+} from "../controllers/Users.js";
 
 const router = express.Router();
 
@@ -26,5 +31,8 @@ router.delete("/note/deleteAll", deleteAllNotes);
 
 //user routes
 router.post("/user", createUser);
+router.get("/user=:id", getUserByID); //only logged in and authenticated
+router.patch("/user=:id", updateUserByID); //only logged in and authenticated
+router.delete("/user=:id", deleteUserById); //only logged in and authenticated
 
 export default router;
