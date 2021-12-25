@@ -5,7 +5,7 @@ import NoNotes from "./NoNotes";
 import EditNote from "./EditNote";
 import ErrorBoundary from "../ErrorBoundary";
 
-const url = process.env.API_ADDRESS || "http://127.0.0.1:3001";
+const url = process.env.API_ADDRESS || "http://127.0.0.1:3001/api";
 
 const getNotes = async (setNote) => {
 	try {

@@ -1,7 +1,7 @@
 //core dependencies
 import express from "express";
 import db from "./config/database.js";
-import noteRoutes from "./routes/index.js";
+import Routes from "./routes/index.js";
 import cors from "cors";
 
 const app = express();
@@ -14,14 +14,20 @@ try {
 	console.error("DB connection error: ", error);
 }
 
-// Enable All CORS Requests
-app.use(cors());
+// Enable CORS Requests
+const corsOptions = {
+	origin: "http://localhost:3001",
+	methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+};
+app.use(cors(corsOptions));
+
 // parse incoming requests with JSON payloads
 app.use(express.json());
+// parse incoming requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
 //routes
-app.use("/", noteRoutes);
+app.use("/", Routes);
 
 //server listen
 app.listen(process.env.PORT, () => {

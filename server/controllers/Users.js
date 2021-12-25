@@ -5,7 +5,11 @@ import User from "../models/userModel.js";
 export const createUser = async (req, res) => {
 	try {
 		await User.create(req.body);
-		res.status(201).json({ message: "User Created" });
+		res.status(201).json({
+			message: "User Created",
+			// auth: true,
+			// token: "token",
+		});
 	} catch (err) {
 		res.status(400).json({ message: err.message });
 	}
@@ -44,6 +48,19 @@ export const deleteUserById = async (req, res) => {
 		res.json({ message: "Your account is now deleted" });
 	} catch (err) {
 		res.status(500).json({ message: err.message });
+	}
+};
+
+export const loginUser = async (req, res) => {
+	try {
+		const user = await User.loginAuth(req.body);
+		const token = await User.createToken(user.user_id);
+		res.cookie("user_id", token, {
+			expires: new Date(Date.now() + 60000 * 60 * 24 * 2),
+			httpOnly: true,
+		}).json(user);
+	} catch (err) {
+		res.status(400).json({ message: err.message });
 	}
 };
 
