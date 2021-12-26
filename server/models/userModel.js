@@ -11,12 +11,11 @@ const User = db.define(
 		//model attributes defined here
 
 		user_id: {
-			autoIncrement: true,
 			primaryKey: true,
 			type: Sequelize.UUID,
 			defaultValue: DataTypes.UUIDV4,
 		},
-		access: {
+		role: {
 			type: DataTypes.TEXT,
 			allowNull: false,
 		},
@@ -77,7 +76,7 @@ User.loginAuth = async (res) => {
 		const user = userFound.dataValues;
 		return {
 			user_id: user.user_id,
-			access: user.access,
+			role: user.role,
 			email: user.email,
 			username: user.username,
 			f_name: user.f_name,
@@ -90,8 +89,10 @@ User.loginAuth = async (res) => {
 
 //generate token
 User.createToken = async (res) => {
+	console.log(res);
 	// prettier-ignore
-	const token = jwt.sign({token: res},process.env.TOKEN_KEY,{ expiresIn: "48h"});
+	const token = jwt.sign({token: res.toString()},process.env.TOKEN_KEY,{ expiresIn: "48h"});
+	console.log(token);
 	return token;
 };
 

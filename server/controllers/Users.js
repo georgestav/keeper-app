@@ -1,6 +1,7 @@
 import formidable from "formidable";
 import sharp from "sharp";
 import User from "../models/userModel.js";
+import jwt from "jsonwebtoken";
 
 export const createUser = async (req, res) => {
 	try {
@@ -55,7 +56,9 @@ export const loginUser = async (req, res) => {
 	try {
 		const user = await User.loginAuth(req.body);
 		const token = await User.createToken(user.user_id);
-		res.cookie("user_id", token, {
+		const verified = jwt.verify(token, process.env.TOKEN_KEY);
+		console.log(verified);
+		res.cookie("u_id", token, {
 			expires: new Date(Date.now() + 60000 * 60 * 24 * 2),
 			httpOnly: true,
 		}).json(user);
@@ -63,20 +66,3 @@ export const loginUser = async (req, res) => {
 		res.status(400).json({ message: err.message });
 	}
 };
-
-// const form = formidable({ maxFileSize: 1000000 });
-
-// 	form.parse(req, (err, fields, files) => {
-// 		if (err) {
-// 			res.status(err.httpCode).send(err.message);
-// 			return next(err);
-// 		}
-// 		const imgToBuffer = sharp(files)
-// 			.resize(300, 300)
-// 			.toBuffer()
-// 			.then((data) => data)
-// 			.catch((err) => console.error(err));
-
-// 		console.log({ fields, files });
-// 		res.status(201).send("ok");
-// 	});
