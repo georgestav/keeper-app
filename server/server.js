@@ -32,7 +32,7 @@ try {
 
 // Enable CORS Requests
 const corsOptions = {
-	origin: "http://localhost:3001",
+	origin: `http://${process.env.SERV_ADRS}:${process.env.PORT}`,
 	methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
 };
 app.use(cors(corsOptions));
