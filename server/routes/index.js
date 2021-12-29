@@ -13,10 +13,11 @@ import {
 
 import {
 	createUser,
-	getUserByID,
-	updateUserByID,
-	deleteUserById,
+	getLoggedUser,
+	updateLoggedUser,
+	deleteLoggedUser,
 	loginUser,
+	logoutUser,
 } from "../controllers/Users.js";
 
 const router = express.Router();
@@ -25,20 +26,23 @@ router.get("/api", (req, res) => {
 	res.json({ msg: "Server up!", status: "In development" });
 });
 //notes routes
-router.post("/api/note", verifyAccess("user"), createNote);
-router.get("/api/note", verifyAccess("user"), readAllNotes);
-router.get("/api/note=:id", verifyAccess("user"), readNotesById);
-router.patch("/api/note=:id", verifyAccess("user"), updateNoteById);
-router.delete("/api/note=:id", verifyAccess("user"), deleteNotebyId);
-router.delete("/api/note/deleteAll", verifyAccess("user"), deleteAllNotes);
+router.post("/api/note", verifyAccess("user"), createNote); //only logged and authenticated
+router.get("/api/note", verifyAccess("user"), readAllNotes); //only logged and authenticated
+router.get("/api/note=:id", verifyAccess("user"), readNotesById); //only logged and authenticated
+router.patch("/api/note=:id", verifyAccess("user"), updateNoteById); //only logged and authenticated
+router.delete("/api/note=:id", verifyAccess("user"), deleteNotebyId); //only logged and authenticated
+router.delete("/api/note/deleteAll", verifyAccess("user"), deleteAllNotes); //only logged and authenticated
 
 //user routes
-router.post("/api/register", createUser);
-router.get("/api/user=:id", verifyAccess("user"), getUserByID); //only logged and authenticated
-router.patch("/api/user=:id", verifyAccess("user"), updateUserByID); //only logged and authenticated
-router.delete("/api/user=:id", verifyAccess("user"), deleteUserById); //only logged and authenticated
+router.get("/api/me", verifyAccess("user"), getLoggedUser); //only logged and authenticated
+router.patch("/api/me", verifyAccess("user"), updateLoggedUser); //only logged and authenticated
+router.delete("/api/me", verifyAccess("user"), deleteLoggedUser); //only logged and authenticated
+
+//register user
+router.post("/api/register", createUser); //public
 // login
 router.post("/api/login", loginUser);
 // logout
+router.post("/api/logout", verifyAccess("user"), logoutUser);
 
 export default router;

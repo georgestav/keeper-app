@@ -2,7 +2,10 @@ import jwt from "jsonwebtoken";
 
 export default function verifyAccess(permitedRole) {
 	return async (req, res, next) => {
-		if (!req.headers.authorization) {
+		if (
+			!req.headers.authorization ||
+			req.headers.authorization === "Bearer null"
+		) {
 			return res.status(403).send({ message: "Login required" });
 		}
 		try {
