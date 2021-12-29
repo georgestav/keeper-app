@@ -20,7 +20,7 @@ User.belongsToMany(Role, {
 	foreignKey: "user_id",
 	otherKey: "role_id",
 });
-await db.sync({ alter: true });
+await db.sync({ sync: true });
 console.log("All models were synchronized successfully.");
 // DB connection
 try {

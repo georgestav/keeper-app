@@ -3,19 +3,6 @@ import sharp from "sharp";
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 
-export const createUser = async (req, res) => {
-	try {
-		await User.create(req.body);
-		res.status(201).json({
-			message: "User Created",
-			// auth: true,
-			// token: "token",
-		});
-	} catch (err) {
-		res.status(400).json({ message: err.message });
-	}
-};
-
 export const getUserByID = async (req, res) => {
 	try {
 		const user = await User.findOne({
@@ -52,16 +39,30 @@ export const deleteUserById = async (req, res) => {
 	}
 };
 
+export const createUser = async (req, res) => {
+	if (req.body.password !== req.body.confPassword) {
+		return res.status(400).send({
+			message:
+				"password provided does not match the confirmation password",
+		});
+	}
+	try {
+		await User.create(req.body);
+		res.status(201).json({
+			message: "User Created",
+			// auth: true,
+			// token: "token",
+		});
+	} catch (err) {
+		res.status(400).send({ message: err.errors[0].message });
+	}
+};
+
 export const loginUser = async (req, res) => {
 	try {
 		const user = await User.loginAuth(req.body);
-		const token = await User.createToken(user.user_id);
-		const verified = jwt.verify(token, process.env.TOKEN_KEY);
-		console.log(verified);
-		res.cookie("u_id", token, {
-			expires: new Date(Date.now() + 60000 * 60 * 24 * 2),
-			httpOnly: true,
-		}).json(user);
+		const token = await User.createToken(JSON.stringify(user));
+		res.send({ token, message: "Login successful" });
 	} catch (err) {
 		res.status(400).json({ message: err.message });
 	}

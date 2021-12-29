@@ -1,5 +1,7 @@
 import express from "express";
 import sharp from "sharp";
+import verifyToken from "../middleware/verifyToken.js";
+
 import {
 	createNote,
 	readAllNotes,
@@ -32,11 +34,11 @@ router.delete("/api/note/deleteAll", deleteAllNotes);
 
 //user routes
 router.post("/api/register", createUser);
-router.get("/api/user=:id", getUserByID); //only logged and authenticated
+router.get("/api/user=:id", verifyToken, getUserByID); //only logged and authenticated
 router.patch("/api/user=:id", updateUserByID); //only logged and authenticated
 router.delete("/api/user=:id", deleteUserById); //only logged and authenticated
 // login
-router.post("/api/login", loginUser);
+router.post("/api/login", verifyToken, loginUser);
 // logout
 
 export default router;

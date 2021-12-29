@@ -14,6 +14,7 @@ const User = db.define(
 			primaryKey: true,
 			type: Sequelize.UUID,
 			defaultValue: DataTypes.UUIDV4,
+			unique: true,
 		},
 		role: {
 			type: DataTypes.TEXT,
@@ -35,6 +36,7 @@ const User = db.define(
 		username: {
 			type: DataTypes.STRING(250),
 			allowNull: false,
+			unique: true,
 		},
 		password: {
 			type: DataTypes.STRING(250),
@@ -77,10 +79,7 @@ User.loginAuth = async (res) => {
 		return {
 			user_id: user.user_id,
 			role: user.role,
-			email: user.email,
 			username: user.username,
-			f_name: user.f_name,
-			l_name: user.l_name,
 		};
 	} catch (error) {
 		throw Error("Could not authenticate");
@@ -89,10 +88,8 @@ User.loginAuth = async (res) => {
 
 //generate token
 User.createToken = async (res) => {
-	console.log(res);
 	// prettier-ignore
 	const token = jwt.sign({token: res.toString()},process.env.TOKEN_KEY,{ expiresIn: "48h"});
-	console.log(token);
 	return token;
 };
 
