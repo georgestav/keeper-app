@@ -1,3 +1,6 @@
+# custom excludes
+/uploads
+
 # Logs
 logs
 *.log

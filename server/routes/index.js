@@ -1,7 +1,6 @@
 import express from "express";
-import sharp from "sharp";
 import verifyAccess from "../middleware/verifyAccess.js";
-
+import multer from "multer";
 import {
 	createNote,
 	readAllNotes,
@@ -18,6 +17,8 @@ import {
 	deleteLoggedUser,
 	loginUser,
 	logoutUser,
+	setAvatar,
+	viewMyAvatar,
 } from "../controllers/Users.js";
 
 const router = express.Router();
@@ -38,11 +39,26 @@ router.get("/api/me", verifyAccess("user"), getLoggedUser); //only logged and au
 router.patch("/api/me", verifyAccess("user"), updateLoggedUser); //only logged and authenticated
 router.delete("/api/me", verifyAccess("user"), deleteLoggedUser); //only logged and authenticated
 
+//upload avatar
+const storage = multer.memoryStorage();
+const upload = multer({
+	storage: storage,
+});
+router.post(
+	"/api/me/avatar",
+	verifyAccess("user"),
+	upload.single("avatar"),
+	setAvatar
+); //
+
+//display avatar
+router.get("/api/me/avatar", verifyAccess("user"), viewMyAvatar);
+
 //register user
 router.post("/api/register", createUser); //public
 // login
-router.post("/api/login", loginUser);
+router.post("/api/login", loginUser); //public
 // logout
-router.post("/api/logout", verifyAccess("user"), logoutUser);
+router.post("/api/logout", verifyAccess("user"), logoutUser); //only logged and authenticated
 
 export default router;

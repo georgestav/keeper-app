@@ -1,4 +1,4 @@
-import formidable from "formidable";
+import multer from "multer";
 import sharp from "sharp";
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
@@ -23,7 +23,7 @@ export const getLoggedUser = async (req, res) => {
 				exclude: ["password"],
 			},
 		});
-		res.json(user);
+		res.send(user);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
 	}
@@ -90,5 +90,33 @@ export const logoutUser = async (req, res) => {
 		res.send({ token: null, message: "logged out" });
 	} catch (err) {
 		res.status(500).send({ message: err.message });
+	}
+};
+
+export const setAvatar = async (req, res) => {
+	const buffer = await sharp(req.file.buffer).png().resize(250).toBuffer();
+	console.log(buffer);
+	const uID = await idFromToken(req);
+	const user = await User.update(
+		{ avatar: buffer },
+		{
+			where: { user_id: uID },
+		}
+	);
+	res.set("Content-Type", "image/png").send(buffer);
+};
+
+export const viewMyAvatar = async (req, res) => {
+	try {
+		const uID = await idFromToken(req);
+		const user = await User.findOne({
+			where: { user_id: uID },
+			attributes: {
+				exclude: ["password"],
+			},
+		});
+		res.set("Content-Type", "image/png").send(user.avatar);
+	} catch (err) {
+		res.status(500).json({ message: err.message });
 	}
 };
